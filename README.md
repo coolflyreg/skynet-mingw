@@ -24,11 +24,13 @@
 ## 测试
 
 ```bash
-./skynet.exe examples/config    # Launch first skynet node  (Gate server) and a skynet-master (see config for standalone option)
+./skynet.exe examples\\config    # Launch first skynet node  (Gate server) and a skynet-master (see config for standalone option)
 ./3rd/lua/lua examples/client.lua   # Launch a client, and try to input hello.
 ```
 
-存在的问题，console服务不可用(无法对stdin进行select)， 会提示如下出错信息，暂时没有解决方案。
+## 已知问题
+
+1. console服务不可用(无法对stdin进行select)， 会提示如下出错信息，暂时没有解决方案。
 
 ```bash
 stack traceback:
@@ -39,5 +41,25 @@ stack traceback:
         ./lualib/skynet.lua:105: in function <./lualib/skynet.lua:104>
 ```
 
+2. 使用`skynet.abort`无法退出，看堆栈卡在了系统中，暂时没有解决方案。（替代方案`os.exit(true)`）
+
+```bash
+#0  0x77bd718c in ntdll!ZwWaitForMultipleObjects () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x74c0a4fa in WaitForMultipleObjectsEx () from C:\WINDOWS\SYSTEM32\KernelBase.dll
+#2  0x74c0a3d8 in WaitForMultipleObjects () from C:\WINDOWS\SYSTEM32\KernelBase.dll
+#3  0x6085be1c in pause () from D:\MinGW\msys\1.0\bin\msys-1.0.dll
+#4  0x6085ccf1 in msys-1.0!cwait () from D:\MinGW\msys\1.0\bin\msys-1.0.dll
+#5  0x6080dff4 in msys-1.0!cygwin_stackdump () from D:\MinGW\msys\1.0\bin\msys-1.0.dll
+#6  0x00413fe5 in ?? ()
+#7  0x00413e8f in ?? ()
+#8  0x00412a1b in ?? ()
+#9  0x0040f77b in ?? ()
+#10 0x0040f151 in ?? ()
+#11 0x00403869 in __mingw_opendir ()
+#12 0x0000000a in ?? ()
+#13 0x0069fe30 in ?? ()
+#14 0x00000000 in ?? ()
+```
+
 ## 相关文档
-[开发笔记](http://www.dpull.com/blog/skynet_mingw/) 
+[开发笔记](http://www.dpull.com/blog/2015-11-08-skynet_mingw) 
